@@ -8,10 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const crypto_1 = require("crypto");
+const create_notification_1 = require("./create-notification");
 const prisma_service_1 = require("./prisma.service");
 let AppController = class AppController {
     constructor(prisma) {
@@ -20,14 +24,15 @@ let AppController = class AppController {
     getNotification() {
         return this.prisma.notification.findMany();
     }
-    async create() {
+    async create(body) {
+        const { content, title, category, recipientId } = body;
         await this.prisma.notification.create({
             data: {
                 id: (0, crypto_1.randomUUID)(),
-                content: 'Voce tem uma nova mensagem!',
-                title: 'Nova mensagem',
-                category: 'Novidade',
-                recipientId: (0, crypto_1.randomUUID)(),
+                content,
+                title,
+                category,
+                recipientId,
             },
         });
     }
@@ -40,8 +45,9 @@ __decorate([
 ], AppController.prototype, "getNotification", null);
 __decorate([
     (0, common_1.Post)('create'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [create_notification_1.CreateNotificationBody]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "create", null);
 AppController = __decorate([
