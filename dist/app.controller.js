@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
+const crypto_1 = require("crypto");
 const prisma_service_1 = require("./prisma.service");
 let AppController = class AppController {
     constructor(prisma) {
@@ -19,6 +20,17 @@ let AppController = class AppController {
     getNotification() {
         return this.prisma.notification.findMany();
     }
+    async create() {
+        await this.prisma.notification.create({
+            data: {
+                id: (0, crypto_1.randomUUID)(),
+                content: 'Voce tem uma nova mensagem!',
+                title: 'Nova mensagem',
+                category: 'Novidade',
+                recipientId: (0, crypto_1.randomUUID)(),
+            },
+        });
+    }
 };
 __decorate([
     (0, common_1.Get)('getall'),
@@ -26,8 +38,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "getNotification", null);
+__decorate([
+    (0, common_1.Post)('create'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "create", null);
 AppController = __decorate([
-    (0, common_1.Controller)('notification'),
+    (0, common_1.Controller)('notifications'),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], AppController);
 exports.AppController = AppController;

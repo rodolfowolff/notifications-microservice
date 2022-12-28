@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Notification {
-  id          Int       @id @default(autoincrement())
+  id          String    @id
   content     String    @db.VarChar(255)
   title       String    @db.VarChar(100)
   category    String
