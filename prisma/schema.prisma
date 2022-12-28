@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  content     String    @db.VarChar(255)
+  title       String    @db.VarChar(100)
+  category    String
+  recipientId String // seria uma referencia a um id de outro servico
+  read        Boolean   @default(false)
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([recipientId]) // indexar se torna mais rapido nas pesquisas por um campo ou mais
+}
